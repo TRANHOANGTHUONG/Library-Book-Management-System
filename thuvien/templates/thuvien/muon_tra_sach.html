@@ -1,0 +1,121 @@
+{% extends "thuvien/base.html" %}
+
+{% block title %}Mượn / Trả sách{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Mượn / Trả sách</h2>
+
+<p class="text-muted">
+  Thực hiện lập phiếu mượn sách và xác nhận trả sách cho độc giả.
+</p>
+
+{% if message %}
+  <div class="alert alert-success">
+    {{ message }}
+  </div>
+{% endif %}
+
+{% if error %}
+  <div class="alert alert-danger">
+    {{ error }}
+  </div>
+{% endif %}
+
+<div class="row g-4">
+
+  <div class="col-lg-6">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header">
+        Lập phiếu mượn sách
+      </div>
+
+      <div class="card-body">
+        <form method="post" action="{% url 'muon_tra_sach' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="muon">
+
+          <div class="mb-3">
+            <label class="form-label">Độc giả</label>
+            <select name="ma_docgia" class="form-select" required>
+              <option value="">-- Chọn độc giả --</option>
+              {% for dg in docgia %}
+                <option value="{{ dg.MaDocGia }}">
+                  {{ dg.HoTen }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Sách</label>
+            <select name="ma_sach" class="form-select" required>
+              <option value="">-- Chọn sách --</option>
+              {% for s in sach %}
+                <option value="{{ s.MaSach }}">
+                  {{ s.TenSach }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Hạn trả</label>
+            <input type="date" name="han_tra" class="form-control" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Lập phiếu mượn
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-lg-6">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header">
+        Xác nhận trả sách
+      </div>
+
+      <div class="card-body">
+        <form method="post" action="{% url 'muon_tra_sach' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="tra">
+
+          <div class="mb-3">
+            <label class="form-label">Mã phiếu mượn</label>
+            <input type="number" name="ma_phieu" class="form-control" min="1" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Sách trả</label>
+            <select name="ma_sach" class="form-select" required>
+              <option value="">-- Chọn sách --</option>
+              {% for s in sach %}
+                <option value="{{ s.MaSach }}">
+                  {{ s.TenSach }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tình trạng sách</label>
+            <select name="tinh_trang" class="form-select">
+              <option value="Binh thuong">Bình thường</option>
+              <option value="Hu hong">Hư hỏng</option>
+              <option value="Mat">Mất sách</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Xác nhận trả sách
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

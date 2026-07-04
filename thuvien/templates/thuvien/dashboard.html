@@ -1,0 +1,128 @@
+{% extends "thuvien/base.html" %}
+
+{% block title %}Tổng quan hệ thống{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <h2 class="mb-2">Tổng quan hệ thống thư viện</h2>
+  <p class="text-muted mb-0">
+    Chọn chức năng nghiệp vụ cần thực hiện trong hệ thống quản lý thư viện.
+  </p>
+</div>
+
+<div class="row g-4">
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Danh mục sách</h5>
+        <p class="card-text text-muted">
+          Tra cứu danh sách sách, tác giả, thể loại và tình trạng lưu thông.
+        </p>
+        <a href="{% url 'danh_muc_sach' %}" class="btn btn-primary">
+          Mở chức năng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Tra cứu trễ hạn</h5>
+        <p class="card-text text-muted">
+          Tính số ngày trễ hạn trả sách để hỗ trợ xử lý phiếu mượn.
+        </p>
+        <a href="{% url 'tra_cuu_tre_han' %}" class="btn btn-primary">
+          Mở chức năng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Mượn / Trả sách</h5>
+        <p class="card-text text-muted">
+          Lập phiếu mượn, xác nhận trả sách và xử lý tình trạng sách.
+        </p>
+        <a href="{% url 'muon_tra_sach' %}" class="btn btn-primary">
+          Mở chức năng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Nghiệp vụ thư viện</h5>
+        <p class="card-text text-muted">
+          Thêm sách mới, quản lý thể loại và xử lý các nghiệp vụ phát sinh.
+        </p>
+        <a href="{% url 'nghiep_vu' %}" class="btn btn-primary">
+          Mở chức năng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Điều chỉnh tồn kho</h5>
+        <p class="card-text text-muted">
+          Cập nhật số lượng sách trong kho khi có thay đổi thực tế.
+        </p>
+        <a href="{% url 'dieu_chinh_kho' %}" class="btn btn-primary">
+          Mở chức năng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Tra cứu số lượng</h5>
+        <p class="card-text text-muted">
+          Kiểm tra nhanh số lượng sách đang được ghi nhận trong kho.
+        </p>
+        <a href="{% url 'kiem_tra_nhanh' %}" class="btn btn-primary">
+          Mở chức năng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Xác nhận tồn kho</h5>
+        <p class="card-text text-muted">
+          Kiểm tra và xác nhận số lượng sách trước khi thực hiện xử lý tiếp theo.
+        </p>
+        <a href="{% url 'xac_nhan_ton_kho' %}" class="btn btn-primary">
+          Mở chức năng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Thống kê thể loại</h5>
+        <p class="card-text text-muted">
+          Thống kê số lượng đầu sách theo từng thể loại trong thư viện.
+        </p>
+        <a href="{% url 'thong_ke_the_loai' %}" class="btn btn-primary">
+          Mở chức năng
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

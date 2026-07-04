@@ -1,0 +1,54 @@
+{% extends "thuvien/base.html" %}
+
+{% block title %}Tra cứu số lượng sách{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Tra cứu số lượng sách</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <form method="post"
+                  action="{% url 'api_kiem_tra_nhanh' %}"
+                  data-library-form
+                  data-result-target="#ketQuaXuLy">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Công việc</label>
+                    <select name="cong_viec" class="form-select">
+                        <option value="tra_cuu">Tra cứu tồn kho</option>
+                        <option value="hieu_chinh">Cập nhật kiểm kê</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mã sách</label>
+                    <input type="number" name="ma_sach" class="form-control" value="1" min="1" required>
+                </div>
+
+                <div class="mb-3" data-section="hieu_chinh">
+                    <label class="form-label">Số lượng ghi nhận</label>
+                    <input type="number" name="so_luong_nhap" class="form-control" value="20" min="0">
+                </div>
+
+                <div class="mb-3" data-section="tra_cuu">
+                    <label class="form-label">Nguồn dữ liệu</label>
+                    <select name="phuong_thuc" class="form-select">
+                        <option value="nhanh">Tra cứu nhanh</option>
+                        <option value="xac_nhan">Tra cứu dữ liệu đã xác nhận</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Tra cứu
+                </button>
+            </form>
+
+            <div id="ketQuaXuLy" class="alert alert-secondary mt-3">
+                Nhập thông tin và thực hiện thao tác.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

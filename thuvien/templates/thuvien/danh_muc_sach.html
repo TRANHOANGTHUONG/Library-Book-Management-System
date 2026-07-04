@@ -1,0 +1,29 @@
+{% extends "thuvien/base.html" %}
+{% block title %}Danh mục & tra cứu{% endblock %}
+{% block content %}
+<h2>Danh mục & tra cứu</h2>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-auto">
+    <select name="muc" class="form-select" onchange="this.form.submit()">
+      {% for value, label in options %}
+        <option value="{{ value }}" {% if value == selected %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+
+<p class="text-muted">{{ selected_label }}</p>
+
+<div class="table-responsive">
+<table class="table table-bordered table-sm table-striped">
+  <thead><tr>{% for c in columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+  <tbody>
+    {% for row in rows %}
+      <tr>{% for key, value in row.items %}<td>{{ value }}</td>{% endfor %}</tr>
+    {% empty %}
+      <tr><td>Không có dữ liệu</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

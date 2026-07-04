@@ -1,0 +1,69 @@
+{% extends "thuvien/base.html" %}
+
+{% block title %}Thống kê sách theo thể loại{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Thống kê sách theo thể loại</h2>
+
+    <p class="text-muted">
+        Kiểm tra số lượng đầu sách theo từng thể loại trong thư viện.
+        Khi thống kê, hệ thống sẽ đối chiếu số lượng theo cùng một danh mục sách.
+    </p>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <form method="post"
+                  action="{% url 'api_thong_ke_the_loai' %}"
+                  data-library-form
+                  data-result-target="#ketQuaXuLy">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Công việc</label>
+                    <select name="cong_viec" class="form-select">
+                        <option value="thong_ke">Thống kê theo thể loại</option>
+                        <option value="bo_sung">Bổ sung đầu sách vào danh mục</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Thể loại</label>
+                    <select name="ma_the_loai" class="form-select" required>
+                        {% for t in theloai %}
+                            <option value="{{ t.MaTheLoai }}">
+                                Mã {{ t.MaTheLoai }} - {{ t.TenTheLoai }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phương thức xử lý</label>
+                    <select name="phuong_thuc" class="form-select">
+                        <option value="thuong">Xử lý thông thường</option>
+                        <option value="kiem_soat">Xử lý có kiểm soát</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Xác nhận
+                </button>
+            </form>
+
+            <div id="ketQuaXuLy" class="alert alert-secondary mt-3">
+                Chọn thể loại và thực hiện thao tác.
+            </div>
+
+            <div class="border rounded mt-3 p-3 bg-light">
+                <div class="fw-semibold mb-2">Quy trình thống kê thể loại</div>
+                <ol class="mb-0 small">
+                    <li>Ghi nhận số đầu sách hiện có trong thể loại đã chọn.</li>
+                    <li>Đối chiếu lại danh mục sau khi có thao tác bổ sung sách.</li>
+                    <li>Hiển thị kết quả để kiểm tra dữ liệu có thay đổi trong quá trình thống kê hay không.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

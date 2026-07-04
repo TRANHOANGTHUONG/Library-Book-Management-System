@@ -1,0 +1,60 @@
+{% extends "thuvien/base.html" %}
+{% block title %}Nghiệp vụ khác{% endblock %}
+{% block content %}
+<h2>Nghiệp vụ khác</h2>
+
+{% if message %}<div class="alert alert-success">{{ message }}</div>{% endif %}
+{% if error %}<div class="alert alert-danger">{{ error }}</div>{% endif %}
+
+<div class="row">
+  <div class="col-md-6">
+    <h5>Nhập sách mới</h5>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="them_sach">
+      <div class="mb-2">
+        <label class="form-label">Tên sách</label>
+        <input type="text" name="ten_sach" class="form-control" required>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Năm xuất bản</label>
+        <input type="number" name="nam_xb" class="form-control">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Số lượng</label>
+        <input type="number" name="so_luong" class="form-control" required>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Thể loại</label>
+        <select name="ma_theloai" class="form-select" required>
+          {% for t in theloai %}<option value="{{ t.MaTheLoai }}">{{ t.TenTheLoai }}</option>{% endfor %}
+        </select>
+      </div>
+      <button class="btn btn-primary">Thêm sách</button>
+    </form>
+  </div>
+
+  <div class="col-md-6">
+    <h5>Thanh toán phiếu phạt</h5>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="thanh_toan">
+      <div class="mb-2">
+        <label class="form-label">Phiếu phạt chưa thanh toán</label>
+        <select name="ma_phieuphat" class="form-select" required>
+          {% for p in phieuphat %}
+            <option value="{{ p.MaPhieuPhat }}">#{{ p.MaPhieuPhat }} - {{ p.LyDo }} - {{ p.SoTienPhat }}đ</option>
+          {% empty %}
+            <option disabled>Không có phiếu phạt nào chưa thanh toán</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Số tiền thu</label>
+        <input type="number" step="0.01" name="so_tien" class="form-control" required>
+      </div>
+      <button class="btn btn-success">Thanh toán</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

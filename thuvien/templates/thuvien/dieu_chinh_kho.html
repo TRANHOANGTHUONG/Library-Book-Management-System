@@ -1,0 +1,46 @@
+{% extends "thuvien/base.html" %}
+
+{% block title %}Điều chỉnh tồn kho{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Điều chỉnh tồn kho sách</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <form method="post"
+                  action="{% url 'api_dieu_chinh_kho' %}"
+                  data-library-form
+                  data-result-target="#ketQuaXuLy">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Mã sách</label>
+                    <input type="number" name="ma_sach" class="form-control" value="1" min="1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Số lượng điều chỉnh</label>
+                    <input type="number" name="delta_qty" class="form-control" value="1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phương thức xử lý</label>
+                    <select name="phuong_thuc" class="form-select">
+                        <option value="thuong">Xử lý thông thường</option>
+                        <option value="kiem_soat">Xử lý có kiểm soát</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Cập nhật
+                </button>
+            </form>
+
+            <div id="ketQuaXuLy" class="alert alert-secondary mt-3">
+                Nhập thông tin và thực hiện thao tác.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

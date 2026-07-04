@@ -1,0 +1,24 @@
+{% extends "thuvien/base.html" %}
+{% block title %}Tính ngày trễ hạn{% endblock %}
+{% block content %}
+<h2>Công cụ tính số ngày trễ hạn</h2>
+<p class="text-muted">Nhập hạn trả để tính số ngày độc giả đã trễ. Bỏ trống "Ngày trả thực tế" nếu sách vẫn chưa được trả (hệ thống tự tính đến hôm nay).</p>
+
+<form method="get" class="row g-3">
+  <div class="col-auto">
+    <label class="form-label">Hạn trả</label>
+    <input type="date" name="han_tra" class="form-control" value="{{ han_tra }}" required>
+  </div>
+  <div class="col-auto">
+    <label class="form-label">Ngày trả thực tế (tuỳ chọn)</label>
+    <input type="date" name="ngay_tra" class="form-control" value="{{ ngay_tra }}">
+  </div>
+  <div class="col-auto align-self-end">
+    <button class="btn btn-primary">Tính</button>
+  </div>
+</form>
+
+{% if result is not None %}
+<div class="alert alert-info mt-3">Số ngày trễ hạn: <strong>{{ result }}</strong> ngày</div>
+{% endif %}
+{% endblock %}

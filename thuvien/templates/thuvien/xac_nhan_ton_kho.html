@@ -1,0 +1,76 @@
+{% extends "thuvien/base.html" %}
+
+{% block title %}Xác nhận tồn kho{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Xác nhận tồn kho</h2>
+
+<p class="text-muted">
+  Kiểm tra và cập nhật số lượng sách trong kho trước khi thực hiện các nghiệp vụ liên quan.
+  Khi chọn kiểm tra tồn kho, hệ thống sẽ xác nhận số lượng hai lần trong cùng một quy trình.
+</p>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post"
+          action="{% url 'api_xac_nhan_ton_kho' %}"
+          data-library-form
+          data-stock-confirm-flow="true"
+          data-result-target="#ketQuaXuLy">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Công việc</label>
+        <select name="cong_viec" class="form-select">
+          <option value="kiem_tra">Kiểm tra tồn kho</option>
+          <option value="cap_nhat">Cập nhật số lượng</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mã sách</label>
+        <input type="number"
+               name="ma_sach"
+               class="form-control"
+               value="1"
+               min="1"
+               required>
+      </div>
+
+      <div class="mb-3" data-section="cap_nhat">
+        <label class="form-label">Số lượng mới</label>
+        <input type="number"
+               name="so_luong_moi"
+               class="form-control"
+               value="15"
+               min="0">
+      </div>
+
+      <div class="mb-3" data-section="kiem_tra">
+        <label class="form-label">Phương thức kiểm tra</label>
+        <select name="phuong_thuc" class="form-select">
+          <option value="thuong">Kiểm tra thông thường</option>
+          <option value="on_dinh">Kiểm tra ổn định</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        Xác nhận
+      </button>
+    </form>
+
+    <div id="ketQuaXuLy" class="alert alert-secondary mt-3">
+      Nhập thông tin và thực hiện thao tác.
+    </div>
+
+    <div class="border rounded mt-3 p-3 bg-light" id="quyTrinhXacNhanTonKho">
+      <div class="fw-semibold mb-2">Quy trình xác nhận tồn kho</div>
+      <ol class="mb-0 small">
+        <li>Xác nhận số lượng ban đầu.</li>
+        <li>Rà soát lại số lượng trước khi duyệt phiếu.</li>
+        <li>Đối chiếu kết quả và hoàn tất.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+{% endblock %}
