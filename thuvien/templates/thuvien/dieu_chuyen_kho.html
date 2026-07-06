@@ -1,0 +1,52 @@
+{% extends "thuvien/base.html" %}
+
+{% block title %}Chuyển kho giữa 2 đầu sách{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Chuyển kho giữa 2 đầu sách</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <form method="post"
+                  action="{% url 'api_dieu_chuyen_kho' %}"
+                  data-library-form
+                  data-result-target="#ketQuaXuLy">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Mã sách nguồn</label>
+                    <input type="number" name="ma_sach_nguon" class="form-control" value="1" min="1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mã sách đích</label>
+                    <input type="number" name="ma_sach_dich" class="form-control" value="2" min="1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Số lượng chuyển</label>
+                    <input type="number" name="so_luong" class="form-control" value="1" min="1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phương thức xử lý</label>
+                    <select name="phuong_thuc" class="form-select">
+                        <option value="thuong">Xử lý thông thường</option>
+                        <option value="thu_tu_khoa">Xử lý có kiểm soát</option>
+                        <option value="tu_dong_thu_lai">Xử lý có tự động thử lại</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Cập nhật
+                </button>
+            </form>
+
+            <div id="ketQuaXuLy" class="alert alert-secondary mt-3">
+                Nhập thông tin và thực hiện thao tác.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

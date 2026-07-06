@@ -1,3 +1,4 @@
+import random
 import time
 from datetime import date
 
@@ -64,6 +65,31 @@ def _call_proc_or_raise(proc_name, params=None):
         raise RuntimeError(result.get("error", "Không thể hoàn tất thao tác."))
 
     return result.get("rows", []), result.get("thoi_gian_giay")
+
+
+def _call_proc_with_deadlock_retry(proc_name, params=None, max_lan_thu=4):
+    """
+    Goi 1 stored procedure; neu ket qua tra ve loi co chua 'deadlock'
+    (hoac ma loi InnoDB 1213), tu dong cho 1 khoang ngan roi goi lai
+    (Detection & Recovery). Neu loi khac hoac da het luot thu, nem loi.
+    Tra ve: (rows, thoi_gian_giay, so_lan_thu)
+    """
+    so_lan_thu = 0
+    while True:
+        so_lan_thu += 1
+        result = _timed_call(proc_name, params or [])
+
+        if result.get("ok"):
+            return result.get("rows", []), result.get("thoi_gian_giay"), so_lan_thu
+
+        loi = str(result.get("error", ""))
+        la_deadlock = "deadlock" in loi.lower() or "1213" in loi
+
+        if la_deadlock and so_lan_thu < max_lan_thu:
+            time.sleep(random.uniform(0.2, 0.6))
+            continue
+
+        raise RuntimeError(result.get("error", "Không thể hoàn tất thao tác."))
 
 
 def _json_success(message, **extra):
@@ -160,6 +186,11 @@ def dashboard(request):
             "title": "Thống kê thể loại",
             "description": "Thống kê số đầu sách theo thể loại.",
             "url_name": "thong_ke_the_loai",
+        },
+        {
+            "title": "Chuyển kho giữa 2 đầu sách",
+            "description": "Chuyển bớt số lượng từ đầu sách này sang đầu sách khác trong kho.",
+            "url_name": "dieu_chuyen_kho",
         },
     ]
 
@@ -385,8 +416,6 @@ def nghiep_vu(request):
 
 # ==================================================================
 # 5) CAC TRANG THAO TAC DONG THOI
-#    Giao dien chi con 1 form.
-#    Nguoi dung mo 2 tab cung mot trang de thao tac dong thoi.
 # ==================================================================
 
 def dieu_chinh_kho(request):
@@ -434,6 +463,16 @@ def xac_nhan_ton_kho(request):
             "message": None,
             "error": None,
         },
+    )
+
+def dieu_chuyen_kho(request):
+    """
+    Trang chuyển kho giữa 2 đầu sách.
+    """
+    return render(
+        request,
+        "thuvien/dieu_chuyen_kho.html",
+        {},
     )
 
 
@@ -698,6 +737,51 @@ def api_thong_ke_the_loai(request):
             so_dau_sach_lan_1=so_dau_sach_lan_1,
             so_dau_sach_lan_2=so_dau_sach_lan_2,
             trang_thai=trang_thai,
+            thoi_gian=thoi_gian,
+        )
+
+    except Exception as error:
+        return _json_error(error)
+
+
+# ==================================================================
+# 7) API CHO TRANG "CHUYEN KHO GIUA 2 DAU SACH" - DEMO DEADLOCK
+# ==================================================================
+
+@require_POST
+def api_dieu_chuyen_kho(request):
+    try:
+        ma_sach_nguon = _to_int(request.POST.get("ma_sach_nguon"), "Mã sách nguồn")
+        ma_sach_dich = _to_int(request.POST.get("ma_sach_dich"), "Mã sách đích")
+        so_luong = _to_int(request.POST.get("so_luong"), "Số lượng chuyển")
+        phuong_thuc = request.POST.get("phuong_thuc", "thuong")
+
+        if ma_sach_nguon == ma_sach_dich:
+            raise ValueError("Mã sách nguồn và đích phải khác nhau.")
+
+        if phuong_thuc == "thu_tu_khoa":
+            rows, thoi_gian = _call_proc_or_raise(
+                "sp_ChuyenKhoGiuaHaiSach_DEADLOCK_FIX",
+                [ma_sach_nguon, ma_sach_dich, so_luong],
+            )
+        elif phuong_thuc == "tu_dong_thu_lai":
+            rows, thoi_gian, _ = _call_proc_with_deadlock_retry(
+                "sp_ChuyenKhoGiuaHaiSach_DEADLOCK_BUG",
+                [ma_sach_nguon, ma_sach_dich, so_luong],
+            )
+        else:
+            rows, thoi_gian = _call_proc_or_raise(
+                "sp_ChuyenKhoGiuaHaiSach_DEADLOCK_BUG",
+                [ma_sach_nguon, ma_sach_dich, so_luong],
+            )
+
+        row = rows[0] if rows else {}
+        so_luong_da_chuyen = _first_value(row, "SoLuongChuyen") or so_luong
+
+        return _json_success(
+            "Chuyển kho giữa 2 đầu sách thành công.",
+            ma_sach=ma_sach_nguon,
+            so_luong=so_luong_da_chuyen,
             thoi_gian=thoi_gian,
         )
 
